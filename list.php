@@ -7,7 +7,13 @@ if(! $conn){
     exit;
 }
 //select all users
-$result =mysqli_query($conn,"SELECT * FROM `users`");
+$query="SELECT * FROM `users`";
+
+if(isset($_GET['search'])){
+    $search=mysqli_escape_string($conn,$_GET['search']);
+    $query.= " WHERE `users` . `username` LIKE '%".$search."%' OR `users` . `email` LIKE '%".$search."%'";
+}
+$result = mysqli_query($conn,$query);
 ?>
 <!doctype html>
 <html lang="en">
@@ -24,9 +30,13 @@ $result =mysqli_query($conn,"SELECT * FROM `users`");
 
     <nav class="navbar bg-body-tertiary">
         <div class="container-fluid " style="justify-content: center;">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="list.php">
                 <h1>List Users</h1>
             </a>
+            <form class="d-flex" role="search" method="GET">
+        <input class="form-control me-2" type="text" name="search" id="search" placeholder="Search" >
+        <button class="btn btn-outline-success" type="submit" value="search">Search</button>
+      </form>
         </div>
     </nav>
 
